@@ -16,3 +16,6 @@ changes:
 
 • added timer that can be stopped and stated by the user, but will start each time a country is placed and stop once all are placed
 
+
+
+note to self: you run this by using python3 -m http.server in terminal while in dir of index file
