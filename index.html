@@ -6,7 +6,8 @@
 
 	<link href="css/default.css" rel="stylesheet" />
 
-	<script src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyBBkuG1503XfWSVpm-9Al69_Ud0qXSkb7Y&libraries=geometry"></script>
+	<!--Google api's no long have a free accout so im not including my key-->
+	<script src="https://maps.googleapis.com/maps/api/js?v=3&key=YOUR_API_KEY_HERE&libraries=geometry"></script>
 	<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<script src="js/google.maps.Polygon.getBounds.js"></script>
 	<script src="js/google.maps.Polygon.moveTo.js"></script>
@@ -173,87 +174,85 @@
 				dataFormat : 'json'
 			}).success(function(data){
 			
-			
 				var Stopwatch = function(elem, options) {
 				
-				  var timer       = createTimer(),
-				      startButton = createButton("start", start),
-				      stopButton  = createButton("stop", stop),
-				      //resetButton = createButton("reset", reset),
-				      offset,
-				      clock,
-				      interval;
+					var timer = createTimer(),
+							startButton = createButton("start", start),
+							stopButton  = createButton("stop", stop),
+							//resetButton = createButton("reset", reset),
+							offset,
+							clock,
+							interval;
 				
-				  // default options
-				  options = options || {};
-				  options.delay = options.delay || 1;
+					// default options
+					options = options || {};
+					options.delay = options.delay || 1;
 				
-				  // append elements     
-				  elem.appendChild(timer);
-				  elem.appendChild(startButton);
-				  elem.appendChild(stopButton);
-				  //elem.appendChild(resetButton);
+					// append elements     
+					elem.appendChild(timer);
+					elem.appendChild(startButton);
+					elem.appendChild(stopButton);
+					//elem.appendChild(resetButton);
 				
-				  // initialize
-				  //reset();
-				  clock = 0;
+					// initialize
+					//reset();
+					clock = 0;
 				
-				  // private functions
-				  function createTimer() {
-				    return document.createElement("span");
-				  }
+					// private functions
+					function createTimer() {
+						return document.createElement("span");
+					}
 				
-				  function createButton(action, handler) {
-				    var a = document.createElement("a");
-				    a.href = "#" + action;
-				    a.innerHTML = action;
-				    a.addEventListener("click", function(event) {
-				      handler();
-				      event.preventDefault();
-				    });
-				    return a;
-				  }
+					function createButton(action, handler) {
+						var a = document.createElement("a");
+						a.href = "#" + action;
+						a.innerHTML = action;
+						a.addEventListener("click", function(event) {
+						  handler();
+						  event.preventDefault();
+						});
+						return a;
+					}
 				
-				  function start() {
-				    if (!interval) {
-				      offset   = Date.now();
-				      interval = setInterval(update, options.delay);
-				    }
-				  }
+					function start() {
+						if (!interval) {
+							offset   = Date.now();
+							interval = setInterval(update, options.delay);
+						}
+					}
 				
-				  function stop() {
-				    if (interval) {
-				      clearInterval(interval);
-				      interval = null;
-				    }
-				  }
-				/*
-				  function reset() {
-				    clock = 0;
-				    render();
-				  }
-				*/
-				  function update() {
-				    clock += delta();
-				    render();
-				  }
+					function stop() {
+						if (interval) {
+							clearInterval(interval);
+							interval = null;
+						}
+					}
+					
+					function reset() {
+						clock = 0;
+						render();
+					}
+					
+					function update() {
+						clock += delta();
+						render();
+					}
 				
-				  function render() {
-				    timer.innerHTML = clock/1000; 
-				  }
+					function render() {
+						timer.innerHTML = clock/1000; 
+					}
 				
-				  function delta() {
-				    var now = Date.now(),
-				        d   = now - offset;
+					function delta() {
+						var now = Date.now(),
+						d = now - offset;
+						offset = now;
+						return d;
+					}
 				
-				    offset = now;
-				    return d;
-				  }
-				
-				  // public API
-				  this.start  = start;
-				  this.stop   = stop;
-				  //this.reset  = reset;
+					// public API
+					this.start = start;
+					this.stop = stop;
+					//this.reset  = reset;
 				};
 			
 
@@ -304,11 +303,13 @@
 						// Show the polygon on the map
 						poly.setMap(map);
 
-						// When we've dragged around our polygon(s), check if it's aligned correctly
+						// When double clicked (give up), place the polygon in the right place
 						google.maps.event.addListener(poly, 'dblclick', function(e) {
 							if (this.draggable) placeCountry(this, false);
 						});
+						// When we've dragged around our polygon(s), check if it's aligned correctly
 						google.maps.event.addListener(poly, 'dragend', function(e) {
+							console.log('draging ' + poly.countryName);
 							if (targetBounds.containsPath(this.getPaths())) {
 								placeCountry(this, true);
 							}
@@ -352,7 +353,7 @@
 						
 						
 						
-						
+						/*
 						$('#endGame').click(function(){
 							if (poly.strokeColor == '#FF0000') {
 								console.log('here1');
@@ -361,7 +362,7 @@
 							}
     					});
 						
-						/*
+						
 						function endGame() {
 							for (i=0; i < 178; i++) {
 								if (poly.indexOf(i).strokeColor == '#FF0000')
